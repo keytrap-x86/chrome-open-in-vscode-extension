@@ -1,0 +1,38 @@
+{
+    "manifest_version": 3,
+    "name": "Open GitHub repo in VS Code",
+    "version": "1.0.1",
+    "description": "Open the current github repository in Visual Studio Code",
+    "icons": {
+        "16": "images/icon16.png",
+        "48": "images/icon48.png",
+        "128": "images/icon128.png"
+    },
+    "host_permissions": [
+        "https://github.com/*/*"
+    ],
+    "author": "@kodsu",
+    "content_scripts": [
+        {
+            "matches": [
+                "https://github.com/*/*"
+            ],
+            "js": [
+                "main.js"
+            ],
+            "run_at": "document_end",
+            "all_frames": true
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "/images/icon.svg"
+            ],
+            "matches": [
+                "https://*/*"
+            ],
+            "extension_ids": ["hhiebbgnielkdnkfegfiibbopjhmojbf"]
+        }
+    ]
+}
