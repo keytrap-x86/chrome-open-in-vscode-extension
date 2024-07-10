@@ -1,35 +1,32 @@
-// Find element id 'local-panel'
-var localPanel = document.getElementById("local-panel");
+const buttons = document.querySelectorAll('button');
+let targetButton = null;
 
-// The first child should be a list of 'Open' buttons
-var firstChild = localPanel.children[0];
+buttons.forEach((button) => {
+  const spans = button.querySelectorAll('span');
+  spans.forEach((span) => {
+    const innerSpan = span.querySelector('span[data-component="text"]');
+    if (innerSpan && innerSpan.textContent.trim() === 'Code') {
+      targetButton = button;
+    }
+  });
+});
 
-// Clone the 2nd button
-var vsCode = firstChild.children[2].cloneNode(true);
+if (!targetButton) {
+  console.log('Could not find the button');
+} else {
+  const newButton = document.createElement('button');
+  newButton.type = 'button';
+  newButton.className = 'Button--secondary Button ml-auto';
+  newButton.style.background = '#007ACC';
+  newButton.style.color = 'white';
+  newButton.textContent = 'Open in VS Code';
+  newButton.onclick = () => {
+    const url = window.location.href;
+    const vscodeUrl = `vscode://vscode.git/clone?url=${url}`;
+    window.open(vscodeUrl);
+  };
 
-// Add the new button to the list just before the Oepn with Visual Studio button
-firstChild.insertBefore(vsCode, firstChild.children[2]);
-
-var vsCodeLinkNode = vsCode.children[0];
-// Change the text to 'VS Code'
-vsCodeLinkNode.innerText = "Open with Visual Studio Code";
-
-// Change the vsCode's first child's href to the VS Code protocol
-vsCodeLinkNode.setAttribute(
-  "href",
-  vsCodeLinkNode
-    .getAttribute("href")
-    .replace("git-client://clone?repo", "vscode://vscode.git/clone?url")
-);
-
-// Load svg icon
-var xhr = new XMLHttpRequest();
-xhr.open("get", chrome.runtime.getURL(`images/icon.svg`), true);
-xhr.onreadystatechange = function () {
-  if (xhr.readyState != 4) return;
-  var svg = xhr.responseXML.documentElement;
-  svg = document.importNode(svg, true);
-  svg.classList.add("mr-2");
-  vsCodeLinkNode.insertBefore(svg, vsCodeLinkNode.firstChild);
-};
-xhr.send();
+  setTimeout(() => {
+    targetButton.after(newButton);
+  }, 0);
+}
